@@ -27,7 +27,7 @@ Once the above software and R packages are installed set up is as simple as down
 
 **Download**
 
-You can download this repository as a zip file and extract to the folder `methylation_EWAS_workshop` where appropriate on your system.
+You can download this repository as a zip file (see top of this page for Download button) and extract to the folder `methylation_EWAS_workshop` where appropriate on your system.
 
 **Clone**
 
