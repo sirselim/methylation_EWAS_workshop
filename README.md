@@ -17,7 +17,7 @@ You will need to ensure you have the following installed on your system:
       - `source("https://bioconductor.org/biocLite.R")`
       - `biocLite("minfi")`
 
-*NOTE: this workshop should work across all OS (Windows, Linux, Mac).*
+*NOTE: this workshop should work across all OS (Windows, Linux, Mac) as long as the above are correctly installed.*
 
 ## Set up
 
@@ -35,7 +35,7 @@ If you are familiar with git and GitHub you can clone into this repository:
 
 `git clone https://github.com/sirselim/methylation_EWAS_workshop.git`
 
-### 2. 
+### 2. move to the correct directory and start working
 
 Open `R`/`RStudio` and ensure that your working directory is set to the `methylation_EWAS_workshop` directory, then open the `EWAS_analysis.R` script and follow along.
 
