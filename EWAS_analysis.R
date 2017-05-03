@@ -12,6 +12,9 @@
 #####################################################
 ### 1. load required packages
 #####################################################
+# if you need to install uncomment the steps below
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("minfi")
 require(minfi)
 
 #####################################################
@@ -19,6 +22,9 @@ require(minfi)
 #####################################################
 meth.anno <- readRDS('data/Ilmn450K_anno.RDS')
 load('data/blood_buccal.RData')
+
+table(rownames(betas) %in% filter.probes)
+betas <- betas[!(rownames(betas) %in% filter.probes),]
 
 #####################################################
 ### 3. set up samples/data and basic QC explore

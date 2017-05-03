@@ -4,7 +4,7 @@ This is a basic EWAS tutorial, introducing basic concepts for analysing methylat
 
 ## Data
 
-The workshop uses public Illumina 450K data from several studies (GSE40279, GSE48472), and is currently designed to investigate the methylation differences between blood (whole blood) and buccal (cheek swabs) tissues. It is aimed at giving a very basic overview of the structure and type of data used in EWAS as well as a few of the available tools and methods to explore this data.
+The workshop uses public Illumina 450K data from several studies (GSE40279, GSE48472, GSE41114, GSE42700, GSE46573, GSE48472, GSE50586). It is currently designed to investigate the methylation differences between blood (whole blood) and buccal (cheek swabs) tissues. It is aimed at giving a very basic overview of the structure and type of data used in EWAS as well as a few of the available tools and methods to explore this data.
 
 ## Required software and packages
 
