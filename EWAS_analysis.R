@@ -24,13 +24,13 @@ load('data/blood_buccal.RData')
 ### 3. set up samples/data and basic QC explore
 #####################################################
 
-# 
+# define samples
 tissues <- c(rep(0, 5), rep(1, 5))
 tissues <- as.factor(tissues)
 levels(tissues) <- c('Blood', 'Buccal')
 names(tissues) <- Samples
 
-#
+# create a densoty plot
 densityPlot(betas, sampGroups = tissues)
 
 # Hierarchical Clustering
@@ -41,7 +41,7 @@ hc <- hclust(d)
 plot(hc, main="Cluster on all probes", labels = tissues)
 
 #####################################################
-### 4. 
+### 4. run dmpfinder - logistic regression
 #####################################################
 
 # minfi dmpfinder
@@ -50,7 +50,7 @@ results <- na.omit(results)
 head(results)
 tail(results)
 
-#
+# explore some results
 table(results$qval < 0.00005)
 top.results <- results[results$qval <= 0.00005,]
 tail(top.results)
@@ -127,7 +127,24 @@ plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels 
 ### 6. Prepare and run pathways analysis
 #####################################################
 
+## create a list of genes which underlie the CpG sites extracted
+# explore annotation
+head(meth.anno) # see what the annotation looks like
 
+# subset annotation based on the top.results
+anno.sub <- meth.anno[meth.anno$IlmnID %in% rownames(top.results),]
 
+# how many different features can be explored?
+table(anno.sub$CHR) # number of significant sites per chromosome
+length(unique(unlist(strsplit(anno.sub$UCSC_RefGene_Name, split = ';')))) # number of unique genes
+
+# get the gene list from the provided 450K annotation object
+genes <- unique(unlist(strsplit(anno.sub$UCSC_RefGene_Name, split = ';')))
+
+# write list of genes out to a file
+write.table(genes, 'EWAS_blood_buccal_genelist.txt', row.names = F, col.names = F, quote = F)
+
+# this list can now be uploaded to your pathways analysis tool
+# suggest WEB-based GEne SeT AnaLysis Toolkit (http://webgestalt.org)
 
 ####/END
