@@ -21,10 +21,8 @@ require(minfi)
 ### 2. load data
 #####################################################
 meth.anno <- readRDS('data/Ilmn450K_anno.RDS')
-load('data/blood_buccal.RData')
-
-table(rownames(betas) %in% filter.probes)
-betas <- betas[!(rownames(betas) %in% filter.probes),]
+betas <- readRDS('data/blood_buccal.RDS')
+# load('data/blood_buccal.RData')
 
 #####################################################
 ### 3. set up samples/data and basic QC explore
@@ -34,7 +32,6 @@ betas <- betas[!(rownames(betas) %in% filter.probes),]
 tissues <- c(rep(0, 5), rep(1, 5))
 tissues <- as.factor(tissues)
 levels(tissues) <- c('Blood', 'Buccal')
-names(tissues) <- Samples
 
 # create a densoty plot
 densityPlot(betas, sampGroups = tissues)
