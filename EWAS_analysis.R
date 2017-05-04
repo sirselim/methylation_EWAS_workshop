@@ -9,6 +9,7 @@
 ## (GSE40279, GSE48472)
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 #####################################################
 ### 1. load required packages
 #####################################################
@@ -17,12 +18,13 @@
 # biocLite("minfi")
 require(minfi)
 
+
 #####################################################
 ### 2. load data
 #####################################################
 meth.anno <- readRDS('data/Ilmn450K_anno.RDS')
 betas <- readRDS('data/blood_buccal.RDS')
-# load('data/blood_buccal.RData')
+
 
 #####################################################
 ### 3. set up samples/data and basic QC explore
@@ -43,6 +45,7 @@ d <- dist(d, method = "minkowski", p = 2)
 hc <- hclust(d)
 plot(hc, main="Cluster on all probes", labels = tissues)
 
+
 #####################################################
 ### 4. run dmpfinder - logistic regression
 #####################################################
@@ -60,7 +63,9 @@ tail(top.results)
 
 # bonferroni correction
 table(results$pval <= (0.05/450000))
+top.results <- results[results$pval <= (0.05/450000),]
 # top.results <- results[results$pval <= (0.05/450000),]
+
 
 #####################################################
 ### 5. plotting the results
@@ -126,6 +131,7 @@ d <- dist(d, method = "minkowski", p = 2)
 hc <- hclust(d)
 plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels = tissues)
 
+
 #####################################################
 ### 6. Prepare and run pathways analysis
 #####################################################
@@ -149,5 +155,5 @@ write.table(genes, 'EWAS_blood_buccal_genelist.txt', row.names = F, col.names = 
 
 # this list can now be uploaded to your pathways analysis tool
 # suggest WEB-based GEne SeT AnaLysis Toolkit (http://webgestalt.org)
-
+#
 ####/END
