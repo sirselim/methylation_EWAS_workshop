@@ -1,5 +1,5 @@
 ---
-title: "Introduction to methtlyation and EWAS workshop"
+title: "Introduction to methlyation and EWAS workshop"
 author: "Miles"
 date: "Updated: May 12, 2017"
 output: html_document
