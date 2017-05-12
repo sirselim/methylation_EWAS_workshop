@@ -183,6 +183,6 @@ You're now ready to click the `submit` button and explore your pathways analysis
 
 Explore the reslutant output.
 
-Have a look at the genes that make up some of the enriched pathways, for example does it make sense to see these pathways? Explore some of the functionality of genes such as *CORO1C*, *EGFR*, *LAT*, and *MAEA*, does this support your hypothesis about the role these pathways might be plying?
+Have a look at the genes that make up some of the enriched pathways, for example does it make sense to see these pathways? Explore some of the functionality of genes such as *CORO1C*, *EGFR*, *LAT*, and *MAEA*, does this support your hypothesis about the role these pathways might be playing?
 
 Have a 'play' with selecting other parameters and seeing what else you can potentially discover about the genes invloved in differentiating these two tissue types at a methlyation level.
