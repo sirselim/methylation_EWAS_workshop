@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 1. load required packages
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # if you need to install uncomment the steps below
 # source("https://bioconductor.org/biocLite.R")
 # biocLite("minfi")
@@ -22,7 +22,7 @@ require(minfi)
 
 ## 2. load data
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 meth.anno <- readRDS('data/Ilmn450K_anno.RDS')
 betas <- readRDS('data/blood_buccal.RDS')
 ```
@@ -30,7 +30,7 @@ betas <- readRDS('data/blood_buccal.RDS')
 
 ## 3. set up samples/data and basic QC explore
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # define samples
 tissues <- c(rep(0, 5), rep(1, 5))
 tissues <- as.factor(tissues)
@@ -49,7 +49,7 @@ plot(hc, main="Cluster on all probes", labels = tissues)
 
 ## 4. run dmpfinder - logistic regression
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # minfi dmpfinder
 results <- dmpFinder(betas, pheno = tissues, type = "categorical", qCutoff = 1)
 results <- na.omit(results)
@@ -63,13 +63,13 @@ tail(top.results)
 
 # bonferroni correction
 table(results$pval <= (0.05/450000))
-top.results <- results[results$pval <= (0.05/450000),]
+# top.results <- results[results$pval <= (0.05/450000),]
 # top.results <- results[results$pval <= (0.05/450000),]
 ```
 
 ## 5. plotting the results
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 ## very basic plotting 
 # top CpG marker ('best'/most significantly associated)
 plotCpg(betas, cpg = "cg05350268", pheno = tissues, type = "categorical", measure = "beta", ylab = "methylation (beta)", ylim = c(0,1))
@@ -85,7 +85,7 @@ boxplot(betas['cg03467405',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = 
 boxplot(betas['cg07046426',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1))
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 ## multiple boxplots
 # loop through a few sites for the top markers (most significantly associated)
 tissue.sites <- rownames(top.results)[c(1:9)]
@@ -98,7 +98,7 @@ for (cpg in tissue.sites) {
 }
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 ## multiple boxplots
 # loop through a few sites for the bottom markers (least significantly associated)
 tissue.sites <- rownames(tail(results, n = 12))[c(1:9)]
@@ -111,7 +111,7 @@ for (cpg in tissue.sites) {
 }
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 ## multiple boxplots
 # can also write this out to a file (pdf)
 pdf('figures/blood_v_buccal_topsites_plot.pdf', width = 7, height = 10)
@@ -128,7 +128,7 @@ dev.off()
 
 ### Hierarchical Clustering 2
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # subset the beta matrix by the top markers and cluster
 sig.betas <- betas[rownames(betas) %in% rownames(top.results),]
 
@@ -144,7 +144,7 @@ plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels 
 
 create a list of genes which underlie the CpG sites extracted
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # explore annotation
 head(meth.anno) # see what the annotation looks like
 
@@ -163,5 +163,25 @@ write.table(genes, 'EWAS_blood_buccal_genelist.txt', row.names = F, col.names = 
 ```
 
 this list can now be uploaded to your pathways analysis tool
-suggest WEB-based GEne SeT AnaLysis Toolkit (http://webgestalt.org)
+
+
+## Pathways analysis
+
+For this section we will be using a popular webserver tool, WEB-based GEne SeT AnaLysis Toolkit (http://webgestalt.org).
+
+Here is an overview of parameters to set:
+
+  - select `hsapiens` as organism;
+  - select `Overrepresentation Enrichment Analysis (ORA)` as method;
+  - ...
+  - for Gene ID select `genesymbol`
+  - then use the browse button to select and upload the list of genes you created earlier 
+  - ...
+  - ...
+  - in the Advanced parameters section set minimum number of genes to `2` and leave the rest of these settings as default
+
+You're now ready to click the `submit` button and explore your pathways analysis.
+
+
+
 
