@@ -36,7 +36,7 @@ tissues <- c(rep(0, 5), rep(1, 5))
 tissues <- as.factor(tissues)
 levels(tissues) <- c('Blood', 'Buccal')
 
-# create a densoty plot
+# create a density plot
 densityPlot(betas, sampGroups = tissues)
 
 # Hierarchical Clustering
