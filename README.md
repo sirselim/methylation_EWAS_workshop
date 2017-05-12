@@ -1,6 +1,6 @@
 # methylation_EWAS_workshop
 
-This is a basic EWAS tutorial, introducing basic concepts for analysing methylation data.
+This is a basic EWAS tutorial, introducing concepts for analysing methylation data.
 
 ## Data
 
