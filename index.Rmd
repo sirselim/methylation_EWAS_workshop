@@ -173,15 +173,16 @@ Here is an overview of parameters to set:
 
   - select `hsapiens` as organism;
   - select `Overrepresentation Enrichment Analysis (ORA)` as method;
-  - ...
+  - select `geneontology` AND `Molecular_Function` 
   - for Gene ID select `genesymbol`
   - then use the browse button to select and upload the list of genes you created earlier 
-  - ...
-  - ...
+  - for reference set select `genome`
   - in the Advanced parameters section set minimum number of genes to `2` and leave the rest of these settings as default
 
 You're now ready to click the `submit` button and explore your pathways analysis.
 
+Explore the reslutant output.
 
+Have a look at the genes that make up some of the enriched pathways, for example does it make sense to see these pathways? Explore some of the functionality of genes such as *CORO1C*, *EGFR*, *LAT*, and *MAEA*, does this support your hypothesis about the role these pathways might be plying?
 
-
+Have a 'play' with selecting other parameters and seeing what else you can potentially discover about the genes invloved in differentiating these two tissue types at a methlyation level.
