@@ -260,7 +260,7 @@ res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph 
 Create a PCA plot:
 
 ```{r, message=FALSE, warning=FALSE}
-res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
+plotellipses(res.pca, keepvar = c('tissue', 'sex'), axes = c(1,2), cex = 0.65, legend = list(bty = "y", x = "topright"))
 ```
 
 What can you infer from the PCA plots? Does it seem like sex could be influencing the analysis?
@@ -269,7 +269,7 @@ We can actually run a PCA on ALL CpG sites, this will help us to decide whether 
 
 **WARNING:** the below will take a few minutes (~5) to complete.
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, message=FALSE, warning=FALSE}
 # set up the data for PCA
 pca.data <- t(betas)
 pca.data <- as.data.frame(pca.data)
@@ -279,3 +279,6 @@ pca.data$sex <- sex
 res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
 ```
 
+```{r, eval=FALSE, message=FALSE, warning=FALSE}
+plotellipses(res.pca, keepvar = c('tissue', 'sex'), axes = c(1,2), cex = 0.65, legend = list(bty = "y", x = "topright"))
+```
