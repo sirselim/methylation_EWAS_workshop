@@ -186,3 +186,96 @@ Explore the reslutant output.
 Have a look at the genes that make up some of the enriched pathways, for example does it make sense to see these pathways? Explore some of the functionality of genes such as *CORO1C*, *EGFR*, *LAT*, and *MAEA*, does this support your hypothesis about the role these pathways might be playing?
 
 Have a 'play' with selecting other parameters and seeing what else you can potentially discover about the genes invloved in differentiating these two tissue types at a methlyation level.
+
+## Extra: Explore sex effects on the data
+
+This section can be run if there is spare time at the end of the workshop.
+
+### Install/Require packages
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages('FactoMineR')
+require(FactoMineR)   # used for PCA and plotting
+```
+
+### Define and extract sex markers (chrX and Y)
+
+First define how many X and Y chr markers are present on the 450k array:
+
+```{r, message=FALSE, warning=FALSE}
+table(meth.anno$CHR == 'chrX' | meth.anno$CHR == 'chrY')
+```
+
+These can be extracted:
+
+```{r, message=FALSE, warning=FALSE}
+sex.markers <- meth.anno[meth.anno$CHR == 'chrX' | meth.anno$CHR == 'chrY',]$IlmnID
+```
+
+Then you can figure out how many of these are in the data that you have loaded:
+
+```{r, message=FALSE, warning=FALSE}
+table(rownames(betas) %in% sex.markers)
+```
+
+```{r, message=FALSE, warning=FALSE}
+sex.betas <- betas[rownames(betas) %in% sex.markers,]
+```
+
+Look at the data, can you see any patterns?
+
+```{r, message=FALSE, warning=FALSE}
+head(sex.betas)
+```
+
+How does it look when clustered?
+
+```{r, message=FALSE, warning=FALSE}
+# Hierarchical Clustering 
+d <- t(sex.betas)
+rownames(d) <- tissues
+d <- dist(d, method = "minkowski", p = 2)
+hc <- hclust(d)
+plot(hc, main="Cluster on X and Y Chr CpG sites", labels = tissues)
+```
+
+This data is obviously mixed sex. We actually know that there are 4 males in this data set so we can create a sex variable to use in further exploratory analysis:
+
+```{r, message=FALSE, warning=FALSE}
+sex <- as.factor(c('female', 'female', 'male', 'male', 'female', 'female', 'female', 'male', 'female', 'male'))
+```
+
+We are know going to perfom a principle components analysis (PCA) as a means to further explore this data:
+
+```{r, message=FALSE, warning=FALSE}
+# set up the data for PCA
+pca.data <- t(sex.betas)
+pca.data <- as.data.frame(pca.data)
+pca.data$tissue <- as.factor(tissues)
+pca.data$sex <- sex
+# perform the PCA
+res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
+```
+
+Create a PCA plot:
+
+```{r, message=FALSE, warning=FALSE}
+res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
+```
+
+What can you infer from the PCA plots? Does it seem like sex could be influencing the analysis?
+
+We can actually run a PCA on ALL CpG sites, this will help us to decide whether sex is potentially impacting our analysis.
+
+**WARNING:** the below will take a few minutes (~5) to complete.
+
+```{r, eval=FALSE}
+# set up the data for PCA
+pca.data <- t(betas)
+pca.data <- as.data.frame(pca.data)
+pca.data$tissue <- as.factor(tissues)
+pca.data$sex <- sex
+# perform the PCA
+res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
+```
+
