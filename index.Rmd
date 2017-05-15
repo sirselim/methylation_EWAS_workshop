@@ -196,12 +196,22 @@ for (cpg in tissue.sites) {
 dev.off()
 ```
 
+If you navigate to the `figures/` directory you'll find the pdf created above.
+
 ### Hierarchical Clustering 2
+
+We previously performed clustering on all CpG sites, now we're going to cluster on those that pass our defined threshold.
+
+First extract a smaller matrix of all significant CpG sites:
 
 ```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # subset the beta matrix by the top markers and cluster
 sig.betas <- betas[rownames(betas) %in% rownames(top.results),]
+```
 
+Now perform the clustering:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # Hierarchical Clustering 
 d <- t(sig.betas)
 rownames(d) <- tissues
@@ -210,30 +220,55 @@ hc <- hclust(d)
 plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels = tissues)
 ```
 
+What do you see?
+
 
 ## 6. prepare and run pathways analysis
 
-create a list of genes which underlie the CpG sites extracted
+Before we can perform a pathways analysis we need to create a list of genes which underlie the CpG sites extracted from our analysis.
+
+First we need to understand what the array annotation looks like:
 
 ```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # explore annotation
 head(meth.anno) # see what the annotation looks like
+```
 
+Now we get a subset of this annotation - this is subsetting the annotation based on the sites that passed our analysis:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # subset annotation based on the top.results
 anno.sub <- meth.anno[meth.anno$IlmnID %in% rownames(top.results),]
+```
 
+Lets explore this a little. How many 'significant' CpG sites are there per chromosome?
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # how many different features can be explored?
 table(anno.sub$CHR) # number of significant sites per chromosome
-length(unique(unlist(strsplit(anno.sub$UCSC_RefGene_Name, split = ';')))) # number of unique genes
+```
 
+How many unique genes are there?
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+length(unique(unlist(strsplit(anno.sub$UCSC_RefGene_Name, split = ';')))) # number of unique genes
+```
+
+We'll extract these to an object called `genes`:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # get the gene list from the provided 450K annotation object
 genes <- unique(unlist(strsplit(anno.sub$UCSC_RefGene_Name, split = ';')))
+```
 
+Then we can write this to a text file:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # write list of genes out to a file
 write.table(genes, 'EWAS_blood_buccal_genelist.txt', row.names = F, col.names = F, quote = F)
 ```
 
-this list can now be uploaded to your pathways analysis tool
+This is the final list of genes which can now be uploaded to your pathways analysis tool.
 
 
 ## Pathways analysis
