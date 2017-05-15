@@ -81,22 +81,54 @@ What do you conclude from the above?
 
 ## 4. run dmpfinder - logistic regression
 
+To run our analysis exploring the difference in methylation between blood and buccal we'll use the `dmpFinder` function from the `minfi` package.
+
+Depending on the 'outcome' (trait/phenotype being investigated) `dmpFinder` can be configured for either categorical (logistic regression) or continuous (linear regression). Here we're looking at blood tissue vs buccal tissue, so a categorical trait - we'll be using logistic regression modelling.
+
+Run `dmpFinder`:
+
 ```{r, message=FALSE, warning=FALSE}
 # minfi dmpfinder
 results <- dmpFinder(betas, pheno = tissues, type = "categorical", qCutoff = 1)
 results <- na.omit(results)
+```
+
+Above we create a `results` object which contains all CpG sites (methylation sites) ranked by p-value (significance), with the most significant sites first. 
+
+Look at the head of `results` (most significant):
+
+```{r, message=FALSE, warning=FALSE}
 head(results)
+```
+
+We can also explore the tail (least significant):
+
+```{r, message=FALSE, warning=FALSE}
 tail(results)
+```
 
+The Q-value is an adjustment for multiple correction bias. We're going to extract all CpG sites which have a Q-value less than 0.0005.
+
+First, how many sites will this be?
+
+```{r, message=FALSE, warning=FALSE}
 # explore some results
-table(results$qval < 0.00005)
-top.results <- results[results$qval <= 0.00005,]
-tail(top.results)
+table(results$qval < 0.0005)
+```
 
+Now extract these sites into an object called `top.results`:
+
+```{r, message=FALSE, warning=FALSE}
+top.results <- results[results$qval <= 0.0005,]
+```
+
+For fun we can explore how many sites pass a stringent Bonferroni correction:
+
+**Note:** Bonferroni threshold is `0.05/[all observations]`, so we'll use `0.05/450000` which is `1.1e-7`.
+
+```{r, message=FALSE, warning=FALSE}
 # bonferroni correction
 table(results$pval <= (0.05/450000))
-# top.results <- results[results$pval <= (0.05/450000),]
-# top.results <- results[results$pval <= (0.05/450000),]
 ```
 
 
