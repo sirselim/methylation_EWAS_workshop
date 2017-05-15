@@ -107,19 +107,19 @@ We can also explore the tail (least significant):
 tail(results)
 ```
 
-The Q-value is an adjustment for multiple correction bias. We're going to extract all CpG sites which have a Q-value less than 0.0001.
+The Q-value is an adjustment for multiple correction bias. We're going to extract all CpG sites which have a Q-value less than 0.00005.
 
 First, how many sites will this be?
 
 ```{r, message=FALSE, warning=FALSE}
 # explore some results
-table(results$qval < 0.0001)
+table(results$qval < 0.00005)
 ```
 
 Now extract these sites into an object called `top.results`:
 
 ```{r, message=FALSE, warning=FALSE}
-top.results <- results[results$qval <= 0.0001,]
+top.results <- results[results$qval <= 0.00005,]
 ```
 
 For fun we can explore how many sites pass a stringent Bonferroni correction:
