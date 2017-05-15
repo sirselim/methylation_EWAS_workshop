@@ -12,10 +12,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 1. load required packages
 
+We need the `minfi` package installed for this workshop.
+
+If you need to install `minfi` follow the steps below:
+
+```{r, eval=FALSE message=FALSE, warning=FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("minfi")
+```
+
+Now load the package:
+
 ```{r, message=FALSE, warning=FALSE}
-# if you need to install uncomment the steps below
-# source("https://bioconductor.org/biocLite.R")
-# biocLite("minfi")
 require(minfi)
 ```
 
