@@ -179,7 +179,9 @@ for (cpg in tissue.sites) {
 }
 ```
 
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+We can also create a pdf containing these plots:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE, results = 'hide'}
 ## multiple boxplots
 # can also write this out to a file (pdf)
 pdf('figures/blood_v_buccal_topsites_plot.pdf', width = 7, height = 10)
