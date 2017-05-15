@@ -107,19 +107,19 @@ We can also explore the tail (least significant):
 tail(results)
 ```
 
-The Q-value is an adjustment for multiple correction bias. We're going to extract all CpG sites which have a Q-value less than 0.0005.
+The Q-value is an adjustment for multiple correction bias. We're going to extract all CpG sites which have a Q-value less than 0.0001.
 
 First, how many sites will this be?
 
 ```{r, message=FALSE, warning=FALSE}
 # explore some results
-table(results$qval < 0.0005)
+table(results$qval < 0.0001)
 ```
 
 Now extract these sites into an object called `top.results`:
 
 ```{r, message=FALSE, warning=FALSE}
-top.results <- results[results$qval <= 0.0005,]
+top.results <- results[results$qval <= 0.0001,]
 ```
 
 For fun we can explore how many sites pass a stringent Bonferroni correction:
@@ -163,7 +163,7 @@ for (cpg in tissue.sites) {
 }
 ```
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
 ## multiple boxplots
 # loop through a few sites for the bottom markers (least significantly associated)
 tissue.sites <- rownames(tail(results, n = 12))[c(1:9)]
