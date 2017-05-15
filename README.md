@@ -18,6 +18,8 @@ You will need to ensure you have the following installed on your system:
     + to install `minfi` run the following within `R`/`RStudio`:
       - `source("https://bioconductor.org/biocLite.R")`
       - `biocLite("minfi")`
+  - the `R` package `FactoMineR`
+    + `install.packages('FactoMineR')` 
 
 *NOTE: this workshop should work across all OS (Windows, Linux, Mac) as long as the above are correctly installed.*
 
