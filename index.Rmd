@@ -1,7 +1,7 @@
 ---
 title: "Introduction to methlyation and EWAS workshop"
 author: "Miles"
-date: "Updated: May 12, 2017"
+date: 'Updated: `r format(Sys.time(), "%d %B, %Y")`'
 output: html_document
 ---
 
@@ -29,6 +29,13 @@ require(minfi)
 
 
 ## 2. load data
+
+The data for this workshop has been provided for you. There are 2 main data files:
+
+  1. annotation for the Illumina 450k methylation array
+  2. methylation data (beta values) for 5 whole blood and 5 buccal samples
+
+Load this into R:
 
 ```{r, message=FALSE, warning=FALSE}
 meth.anno <- readRDS('data/Ilmn450K_anno.RDS')
