@@ -1,6 +1,6 @@
 ---
 title: "Introduction to methlyation and EWAS workshop"
-author: "Miles"
+author: "created by Miles Benton"
 date: 'Updated: `r format(Sys.time(), "%d %B, %Y")`'
 output: html_document
 ---
@@ -45,15 +45,29 @@ betas <- readRDS('data/blood_buccal.RDS')
 
 ## 3. set up samples/data and basic QC explore
 
+We'll create an object called `tissues` which provides identification of our blood and buccal samples:
+
 ```{r, message=FALSE, warning=FALSE}
 # define samples
 tissues <- c(rep(0, 5), rep(1, 5))
 tissues <- as.factor(tissues)
 levels(tissues) <- c('Blood', 'Buccal')
+```
 
+Now we'll explore the distribution of methylation values (beta values) by creating a density plot. A methylation distribution for a given individual follows a bimodal distribution, with peaks around 0 (unmethylated) and 1 (methylated).
+
+Create a desity plot for all samples, what do you see?
+
+```{r, message=FALSE, warning=FALSE}
 # create a density plot
 densityPlot(betas, sampGroups = tissues)
+```
 
+Another way of exploring a data set is by cluster analysis.
+
+Here we perform hierarchical clustering on the 10 samples using all available data:
+
+```{r, message=FALSE, warning=FALSE}
 # Hierarchical Clustering
 d <- t(betas)
 rownames(d) <- tissues
@@ -61,6 +75,9 @@ d <- dist(d, method = "minkowski", p = 2)
 hc <- hclust(d)
 plot(hc, main="Cluster on all probes", labels = tissues)
 ```
+
+What do you conclude from the above?
+
 
 ## 4. run dmpfinder - logistic regression
 
@@ -81,6 +98,7 @@ table(results$pval <= (0.05/450000))
 # top.results <- results[results$pval <= (0.05/450000),]
 # top.results <- results[results$pval <= (0.05/450000),]
 ```
+
 
 ## 5. plotting the results
 
@@ -155,7 +173,8 @@ hc <- hclust(d)
 plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels = tissues)
 ```
 
-## 6. Prepare and run pathways analysis
+
+## 6. prepare and run pathways analysis
 
 create a list of genes which underlie the CpG sites extracted
 
@@ -201,6 +220,7 @@ Explore the reslutant output.
 Have a look at the genes that make up some of the enriched pathways, for example does it make sense to see these pathways? Explore some of the functionality of genes such as *CORO1C*, *EGFR*, *LAT*, and *MAEA*, does this support your hypothesis about the role these pathways might be playing?
 
 Have a 'play' with selecting other parameters and seeing what else you can potentially discover about the genes invloved in differentiating these two tissue types at a methlyation level.
+
 
 ## Extra: Explore sex effects on the data
 
