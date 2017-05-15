@@ -2,7 +2,10 @@
 title: "Introduction to methlyation and EWAS workshop"
 author: "created by Miles Benton"
 date: 'Updated: `r format(Sys.time(), "%d %B, %Y")`'
-output: html_document
+output: 
+  html_document:
+    includes:
+      in_header: extLogo.html
 ---
 
 ```{r setup, include=FALSE}
