@@ -16,7 +16,7 @@ We need the `minfi` package installed for this workshop.
 
 If you need to install `minfi` follow the steps below:
 
-```{r, eval=FALSE message=FALSE, warning=FALSE}
+```{r, eval=FALSE, message=FALSE, warning=FALSE}
 source("https://bioconductor.org/biocLite.R")
 biocLite("minfi")
 ```
