@@ -134,23 +134,26 @@ table(results$pval <= (0.05/450000))
 
 ## 5. plotting the results
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 ## very basic plotting 
 # top CpG marker ('best'/most significantly associated)
 plotCpg(betas, cpg = "cg05350268", pheno = tissues, type = "categorical", measure = "beta", ylab = "methylation (beta)", ylim = c(0,1))
+```
 
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # bottom CpG marker ('best'/most significantly associated)
 plotCpg(betas, cpg = "cg07309136", pheno = tissues, type = "categorical", measure = "beta", ylab = "methylation (beta)", ylim = c(0,1))
+```
 
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 ## boxplots
 # lets look at a few boxplots
 boxplot(betas['cg05350268',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1))
 boxplot(betas['cg19653345',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1))
-boxplot(betas['cg03467405',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1))
-boxplot(betas['cg07046426',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1))
 ```
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 ## multiple boxplots
 # loop through a few sites for the top markers (most significantly associated)
 tissue.sites <- rownames(top.results)[c(1:9)]
@@ -163,7 +166,7 @@ for (cpg in tissue.sites) {
 }
 ```
 
-```{r, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, message=FALSE, warning=FALSE, eval=FALSE, tidy=TRUE}
 ## multiple boxplots
 # loop through a few sites for the bottom markers (least significantly associated)
 tissue.sites <- rownames(tail(results, n = 12))[c(1:9)]
@@ -176,7 +179,7 @@ for (cpg in tissue.sites) {
 }
 ```
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 ## multiple boxplots
 # can also write this out to a file (pdf)
 pdf('figures/blood_v_buccal_topsites_plot.pdf', width = 7, height = 10)
@@ -193,7 +196,7 @@ dev.off()
 
 ### Hierarchical Clustering 2
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # subset the beta matrix by the top markers and cluster
 sig.betas <- betas[rownames(betas) %in% rownames(top.results),]
 
@@ -210,7 +213,7 @@ plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels 
 
 create a list of genes which underlie the CpG sites extracted
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # explore annotation
 head(meth.anno) # see what the annotation looks like
 
@@ -326,7 +329,7 @@ res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph 
 
 Create a PCA plot:
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 plotellipses(res.pca, keepvar = c('tissue', 'sex'), axes = c(1,2), cex = 0.65, legend = list(bty = "y", x = "topright"))
 ```
 
@@ -336,7 +339,7 @@ We can actually run a PCA on ALL CpG sites, this will help us to decide whether 
 
 **WARNING:** the below will take a few minutes (~5) to complete.
 
-```{r, eval=FALSE, message=FALSE, warning=FALSE}
+```{r, eval=FALSE, message=FALSE, warning=FALSE, tidy=TRUE}
 # set up the data for PCA
 pca.data <- t(betas)
 pca.data <- as.data.frame(pca.data)
@@ -346,6 +349,6 @@ pca.data$sex <- sex
 res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
 ```
 
-```{r, eval=FALSE, message=FALSE, warning=FALSE}
+```{r, eval=FALSE, message=FALSE, warning=FALSE, tidy=TRUE}
 plotellipses(res.pca, keepvar = c('tissue', 'sex'), axes = c(1,2), cex = 0.65, legend = list(bty = "y", x = "topright"))
 ```
