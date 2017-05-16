@@ -311,7 +311,9 @@ Have a 'play' with selecting other parameters and seeing what else you can poten
   
 ## Extra: Explore sex effects on the data 
 
-This section can be run if there is spare time at the end of the workshop.
+(**Note:** This section can be run if there is spare time at the end of the workshop.)
+
+Sex can be an important factor and potentially confounder to many analyses, so here we will explore whether there are samples from both sexes present and if they impact on the final results.
 
 ### Install/Require packages
 
