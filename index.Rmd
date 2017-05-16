@@ -6,7 +6,7 @@ output:
   html_document:
     includes:
       in_header: extLogo.html
-      in_footer: extLogo.html
+      after_body: extFooter.html
 ---
 
 ```{r setup, include=FALSE}
