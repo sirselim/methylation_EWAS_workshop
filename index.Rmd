@@ -317,6 +317,8 @@ Sex can be an important factor and potentially confounder to many analyses, so h
 
 ### Install/Require packages
 
+We're going to be using the brilliant `FactoMineR` package (http://factominer.free.fr/) during this little experiment, so if it's not currently installed make sure to do so, then load the package:
+
 ```{r, message=FALSE, warning=FALSE}
 # install.packages('FactoMineR')
 require(FactoMineR)   # used for PCA and plotting
@@ -391,7 +393,7 @@ What can you infer from the PCA plots? Does it seem like sex could be influencin
 
 We can actually run a PCA on ALL CpG sites, this will help us to decide whether sex is potentially impacting our analysis.
 
-**WARNING:** the below will take a few minutes (~5) to complete.
+**WARNING:** the below will take several minutes (~5 depending on the machine) to complete.
 
 ```{r, eval=FALSE, message=FALSE, warning=FALSE, tidy=TRUE}
 # set up the data for PCA
