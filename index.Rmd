@@ -4,15 +4,27 @@ author: "created by Miles Benton"
 date: 'Updated: `r format(Sys.time(), "%d %B, %Y")`'
 output: 
   html_document:
+    df_print: kable
+    code_folding: show
     includes:
       in_header: extLogo.html
       after_body: extFooter.html
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library('printr')
 ```
 
+-----------  
+
+This is a basic EWAS tutorial, introducing some of the concepts and tools for analysing methylation data.  
+
+The workshop uses public Illumina 450K data from several studies (GSE40279, GSE48472, GSE41114, GSE42700, GSE46573, GSE48472, GSE50586). It is currently designed to investigate the methylation differences between blood (whole blood) and buccal (cheek swabs) tissues. It is aimed at giving a very basic overview of the structure and type of data used in EWAS as well as a few of the available tools and methods to explore this data.  
+
+**Note:** Before starting this workshop please visit [GitHub](https://github.com/sirselim/methylation_EWAS_workshop) and make sure you have downloaded the repository and have set up all the required software for this workshop.  
+
+-----------
 
 ## 1. load required packages
 
@@ -29,9 +41,10 @@ Now load the package:
 
 ```{r, message=FALSE, warning=FALSE}
 require(minfi)
-```
-
-
+```  
+  
+-----------
+  
 ## 2. load data
 
 The data for this workshop has been provided for you. There are 2 main data files:
@@ -45,8 +58,9 @@ Load this into R:
 meth.anno <- readRDS('data/Ilmn450K_anno.RDS')
 betas <- readRDS('data/blood_buccal.RDS')
 ```
-
-
+  
+-----------
+  
 ## 3. set up samples/data and basic QC explore
 
 We'll create an object called `tissues` which provides identification of our blood and buccal samples:
@@ -60,9 +74,9 @@ levels(tissues) <- c('Blood', 'Buccal')
 
 Now we'll explore the distribution of methylation values (beta values) by creating a density plot. A methylation distribution for a given individual follows a bimodal distribution, with peaks around 0 (unmethylated) and 1 (methylated).
 
-Create a desity plot for all samples, what do you see?
+Create a density plot for all samples, what do you see?
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.align='center'}
 # create a density plot
 densityPlot(betas, sampGroups = tissues)
 ```
@@ -71,19 +85,20 @@ Another way of exploring a data set is by cluster analysis.
 
 Here we perform hierarchical clustering on the 10 samples using all available data:
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.align='center'}
 # Hierarchical Clustering
 d <- t(betas)
 rownames(d) <- tissues
 d <- dist(d, method = "minkowski", p = 2)
 hc <- hclust(d)
-plot(hc, main="Cluster on all probes", labels = tissues)
+plot(hc, main="Cluster on all probes", labels = tissues, xlab = '', sub="")
 ```
 
 What do you conclude from the above?
-
-
-## 4. run dmpfinder - logistic regression
+  
+-----------
+  
+## 4. run dmpFinder - logistic regression
 
 To run our analysis exploring the difference in methylation between blood and buccal we'll use the `dmpFinder` function from the `minfi` package.
 
@@ -134,46 +149,39 @@ For fun we can explore how many sites pass a stringent Bonferroni correction:
 # bonferroni correction
 table(results$pval <= (0.05/450000))
 ```
-
-
+  
+-----------
+  
 ## 5. plotting the results
 
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+It is important to be able to visualise your data/results, so here we're going to use some of the graphing functions of `R` to do just that.
+
+First lets try the `plotCpg` function from the `minfi` package:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE, fig.align='center', fig.show='hold'}
 ## very basic plotting 
 # top CpG marker ('best'/most significantly associated)
 plotCpg(betas, cpg = "cg05350268", pheno = tissues, type = "categorical", measure = "beta", ylab = "methylation (beta)", ylim = c(0,1))
-```
-
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # bottom CpG marker ('best'/most significantly associated)
 plotCpg(betas, cpg = "cg07309136", pheno = tissues, type = "categorical", measure = "beta", ylab = "methylation (beta)", ylim = c(0,1))
 ```
 
 
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+We can also use base `R` plotting to create boxplots:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE, fig.align='center', fig.show='hold'}
 ## boxplots
 # lets look at a few boxplots
-boxplot(betas['cg05350268',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1))
-boxplot(betas['cg19653345',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1))
+boxplot(betas['cg05350268',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1), main = 'cg05350268')
+boxplot(betas['cg19653345',] ~ tissues, col = c('darkred', 'cadetblue'), ylim = c(0,1) , main ='cg19653345')
 ```
 
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+If we want to create more than one plot at a time we can do so:
+
+```{r, message=FALSE, warning=FALSE, tidy=TRUE, fig.align='center'}
 ## multiple boxplots
 # loop through a few sites for the top markers (most significantly associated)
 tissue.sites <- rownames(top.results)[c(1:9)]
-
-par(mfrow = c(3,3))
-for (cpg in tissue.sites) {
-  
-  boxplot(betas[cpg,] ~ tissues, col = c('darkred', 'cadetblue'), ylab = "methylation (beta)", xlab = "tissue", main = cpg, ylim = c(0,1))
-  
-}
-```
-
-```{r, message=FALSE, warning=FALSE, eval=FALSE, tidy=TRUE}
-## multiple boxplots
-# loop through a few sites for the bottom markers (least significantly associated)
-tissue.sites <- rownames(tail(results, n = 12))[c(1:9)]
 
 par(mfrow = c(3,3))
 for (cpg in tissue.sites) {
@@ -215,18 +223,19 @@ sig.betas <- betas[rownames(betas) %in% rownames(top.results),]
 
 Now perform the clustering:
 
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, message=FALSE, warning=FALSE, tidy=TRUE, fig.align='center'}
 # Hierarchical Clustering 
 d <- t(sig.betas)
 rownames(d) <- tissues
 d <- dist(d, method = "minkowski", p = 2)
 hc <- hclust(d)
-plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels = tissues)
+plot(hc, main="Cluster on selected top tissue discrimination CpG sites", labels = tissues, xlab = '', sub="")
 ```
 
 What do you see?
-
-
+  
+-----------
+  
 ## 6. prepare and run pathways analysis
 
 Before we can perform a pathways analysis we need to create a list of genes which underlie the CpG sites extracted from our analysis.
@@ -238,7 +247,7 @@ First we need to understand what the array annotation looks like:
 head(meth.anno) # see what the annotation looks like
 ```
 
-Now we get a subset of this annotation - this is subsetting the annotation based on the sites that passed our analysis:
+Now we get a subset of this annotation - this is sub-setting the annotation based on the sites that passed our analysis:
 
 ```{r, message=FALSE, warning=FALSE, tidy=TRUE}
 # subset annotation based on the top.results
@@ -277,13 +286,14 @@ This is the final list of genes which can now be uploaded to your pathways analy
 
 ## Pathways analysis
 
-For this section we will be using a popular webserver tool, WEB-based GEne SeT AnaLysis Toolkit (http://webgestalt.org).
+For this section we will be using a popular web-server tool, WEB-based GEne SeT AnaLysis Toolkit (http://webgestalt.org).
 
 Here is an overview of parameters to set:
 
   - select `hsapiens` as organism;
   - select `Overrepresentation Enrichment Analysis (ORA)` as method;
-  - select `geneontology` AND `Molecular_Function` 
+  - select `geneontology` AND `Biological_Process` 
+    + *NOTE:* after you've run through `Biological_Process` try again with `Cellular_Component` and `Molecular_Function` 
   - for Gene ID select `genesymbol`
   - then use the browse button to select and upload the list of genes you created earlier 
   - for reference set select `genome`
@@ -291,14 +301,15 @@ Here is an overview of parameters to set:
 
 You're now ready to click the `submit` button and explore your pathways analysis.
 
-Explore the reslutant output.
+Explore the resultant output.
 
 Have a look at the genes that make up some of the enriched pathways, for example does it make sense to see these pathways? Explore some of the functionality of genes such as *CORO1C*, *EGFR*, *LAT*, and *MAEA*, does this support your hypothesis about the role these pathways might be playing?
 
-Have a 'play' with selecting other parameters and seeing what else you can potentially discover about the genes invloved in differentiating these two tissue types at a methlyation level.
-
-
-## Extra: Explore sex effects on the data
+Have a 'play' with selecting other parameters and seeing what else you can potentially discover about the genes involved in differentiating these two tissue types at a methlyation level.
+  
+-----------
+  
+## Extra: Explore sex effects on the data 
 
 This section can be run if there is spare time at the end of the workshop.
 
@@ -339,15 +350,15 @@ Look at the data, can you see any patterns?
 head(sex.betas)
 ```
 
-How does it look when clustered?
+How does it look when clustered?  
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.align='center'}
 # Hierarchical Clustering 
 d <- t(sex.betas)
 rownames(d) <- tissues
 d <- dist(d, method = "minkowski", p = 2)
 hc <- hclust(d)
-plot(hc, main="Cluster on X and Y Chr CpG sites", labels = tissues)
+plot(hc, main="Cluster on X and Y Chr CpG sites", labels = tissues, xlab = '', sub="")
 ```
 
 This data is obviously mixed sex. We actually know that there are 4 males in this data set so we can create a sex variable to use in further exploratory analysis:
@@ -356,7 +367,7 @@ This data is obviously mixed sex. We actually know that there are 4 males in thi
 sex <- as.factor(c('female', 'female', 'male', 'male', 'female', 'female', 'female', 'male', 'female', 'male'))
 ```
 
-We are know going to perfom a principle components analysis (PCA) as a means to further explore this data:
+We are know going to perform a principle components analysis (PCA) as a means to further explore this data:
 
 ```{r, message=FALSE, warning=FALSE}
 # set up the data for PCA
@@ -368,9 +379,9 @@ pca.data$sex <- sex
 res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
 ```
 
-Create a PCA plot:
-
-```{r, message=FALSE, warning=FALSE, tidy=TRUE}
+Create a PCA plot:  
+<!-- <input type=button class=hideshow></input> -->
+```{r pca_plot, message=FALSE, warning=FALSE, tidy=TRUE, fig.align='center'}
 plotellipses(res.pca, keepvar = c('tissue', 'sex'), axes = c(1,2), cex = 0.65, legend = list(bty = "y", x = "topright"))
 ```
 
@@ -390,6 +401,25 @@ pca.data$sex <- sex
 res.pca <- PCA(pca.data, quali.sup = c(ncol(pca.data), ncol(pca.data)-1), graph = FALSE)
 ```
 
-```{r, eval=FALSE, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, eval=FALSE, message=FALSE, warning=FALSE, tidy=TRUE, fig.align='center'}
 plotellipses(res.pca, keepvar = c('tissue', 'sex'), axes = c(1,2), cex = 0.65, legend = list(bty = "y", x = "topright"))
 ```
+
+What can we infer about sex and it's influence on our analysis from the above?
+
+<!-- <script> -->
+<!-- $( "input.hideshow" ).each( function ( index, button ) { -->
+<!--   button.value = 'Toogle figure'; -->
+<!--   $( button ).click( function () { -->
+<!--     var target = this.nextSibling ? this : this.parentNode; -->
+<!--     target = target.nextSibling.nextSibling.nextSibling.nextSibling.nextSibling; -->
+<!--     if ( target.style.display == '' || target.style.display == 'block' ) { -->
+<!--       target.style.display = 'none'; -->
+<!--       this.value = 'Toogle figure'; -->
+<!--     } else { -->
+<!--       target.style.display = 'block'; -->
+<!--       this.value = 'Toogle figure'; -->
+<!--     } -->
+<!--   } ); -->
+<!-- } ); -->
+<!-- </script> -->
