@@ -371,7 +371,7 @@ This data is obviously mixed sex. We actually know that there are 4 males in thi
 sex <- as.factor(c('female', 'female', 'male', 'male', 'female', 'female', 'female', 'male', 'female', 'male'))
 ```
 
-We are know going to perform a principle components analysis (PCA) as a means to further explore this data:
+We are now going to perform a principle components analysis (PCA) as a means to further explore this data:
 
 ```{r, message=FALSE, warning=FALSE}
 # set up the data for PCA
